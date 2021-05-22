@@ -36,7 +36,7 @@ router.post('/signin', async (req, res)=>{
             const validPassword = await bcrypt.compare(req.body.password, user.password)
             !validPassword && res.status(400).json("wrong password")
 
-            let accessToken = jwt.sign({user}, 'access', {expiresIn: '70s'})
+            let accessToken = jwt.sign({user}, 'access', {expiresIn: '10m'})
             let refreshToken =   jwt.sign({user}, 'refresh', {expiresIn: '10m'})
             refreshTokens.push(refreshToken)
 
@@ -64,6 +64,7 @@ router.post('/signin', async (req, res)=>{
 
 }); 
 
+//Verify AccessToken
 
 router.post('/post', verifyToken, (req, res)=>{
 
@@ -72,11 +73,13 @@ router.post('/post', verifyToken, (req, res)=>{
             res.sendStatus(403)
         }else{
 
-            res.status(200).send("ishladi")
+            res.status(200).send("Worked")
         }
     })
 
 })
+
+//RefreshToken
 
 router.post('/refreshAccess', (req,res)=>{
     const refreshtoken = req.body.token
@@ -86,7 +89,7 @@ router.post('/refreshAccess', (req,res)=>{
     jwt.verify(refreshtoken, 'refresh', (err, user)=>{
         if(!err){
             console.log(user.name)
-            const accessToken = jwt.sign({username: user.name}, 'access', {expiresIn: "70s"})
+            const accessToken = jwt.sign({username: user.name}, 'access', {expiresIn: "10m"})
             return res.status(201).json({accessToken})
         }else{
           return res.status(403).json({message: "User not authenticated"})

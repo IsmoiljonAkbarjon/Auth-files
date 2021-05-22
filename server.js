@@ -33,5 +33,5 @@ app.use("/",  UploadRoute)
 
 
 app.listen(8800, ()=>{
-    console.log('server 8800da ishladi')
+    console.log('server worked at 8800')
 })
